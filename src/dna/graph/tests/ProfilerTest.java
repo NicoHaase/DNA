@@ -179,9 +179,9 @@ public class ProfilerTest {
 		assertEquals(0,
 				Profiler.getCount(metricKey, ProfilerType.SizeNodeGlobal));
 		metric.compute();
-		// Node size is called *twice* in the metric: once directly, once
-		// through printAll()
-		assertEquals(2,
+		// Node size is called *three* times in the metric: once directly, once
+		// through printAll(), and once through printE()
+		assertEquals(3,
 				Profiler.getCount(metricKey, ProfilerType.SizeNodeGlobal));
 	}
 
@@ -219,9 +219,9 @@ public class ProfilerTest {
 		assertEquals(0,
 				Profiler.getCount(metricKey, ProfilerType.SizeEdgeGlobal));
 		metric.compute();
-		// Edge size is called *twice* in the metric: once directly, once
-		// through printAll()
-		assertEquals(2,
+		// Edge size is called *three* time in the metric: once directly, once
+		// through printAll(), once through printE()
+		assertEquals(3,
 				Profiler.getCount(metricKey, ProfilerType.SizeEdgeGlobal));
 	}
 
@@ -257,7 +257,7 @@ public class ProfilerTest {
 		assertEquals(0, Profiler.getCount(metricKey,
 				ProfilerType.IteratorEdgeGlobal));
 		metric.compute();
-		assertEquals(1, Profiler.getCount(metricKey,
+		assertEquals(2, Profiler.getCount(metricKey,
 				ProfilerType.IteratorEdgeGlobal));
 	}
 
@@ -314,6 +314,9 @@ public class ProfilerTest {
 
 			// Run the interesting stuff
 			g.printAll();
+			
+			// Another usecase for the edge iterator
+			g.printE();
 
 			System.setOut(former);
 
@@ -326,7 +329,7 @@ public class ProfilerTest {
 				UndirectedNode un1 = (UndirectedNode) n1;
 				un1.getDegree();
 			}
-
+			
 			return false;
 		}
 
