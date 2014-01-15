@@ -5,6 +5,7 @@ import com.google.common.collect.ObjectArrays;
 import dna.graph.datastructures.DArray;
 import dna.graph.datastructures.DArrayList;
 import dna.graph.datastructures.DEmpty;
+import dna.graph.datastructures.DHashArrayList;
 import dna.graph.datastructures.DHashMap;
 import dna.graph.datastructures.DHashSet;
 import dna.graph.datastructures.DLinkedList;
@@ -40,7 +41,7 @@ public class GlobalTestParameters {
 			edgeTypes, Class.class);
 
 	public static final Class[] dataStructures = { DArray.class,
-			DArrayList.class, DHashMap.class, DHashSet.class,
+			DArrayList.class, DHashArrayList.class, DHashMap.class, DHashSet.class,
 			DLinkedList.class, DEmpty.class };
 
 	public static final Class[] graphGenerators = { RandomGraphGenerator.class,
