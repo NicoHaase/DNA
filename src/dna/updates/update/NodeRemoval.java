@@ -22,13 +22,9 @@ public class NodeRemoval extends NodeUpdate {
 		boolean success = true;
 		if (this.node instanceof DirectedNode) {
 			DirectedNode node = (DirectedNode) this.node;
-			for (IElement e : node.getOutgoingEdges()) {
-				success &= ((DirectedEdge) e).getDst().removeEdge((Edge) e);
-				success &= g.removeEdge((Edge) e);
-			}
-			for (IElement e : node.getIncomingEdges()) {
-				success &= ((DirectedEdge) e).getSrc().removeEdge((Edge) e);
-				success &= g.removeEdge((Edge) e);
+			
+			for ( IElement n: node.getNeighbors()) {
+				success &= ((DirectedNode)n).removeNeighbor(node);
 			}
 		} else if (this.node instanceof UndirectedNode) {
 			UndirectedNode node = (UndirectedNode) this.node;

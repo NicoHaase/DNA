@@ -51,8 +51,6 @@ public class DegreeDistributionR extends DegreeDistribution {
 			for (IElement nUncasted : this.g.getNodes()) {
 				DirectedNode n = (DirectedNode) nUncasted;
 				this.degree.incr(n.getDegree());
-				this.inDegree.incr(n.getInDegree());
-				this.outDegree.incr(n.getOutDegree());
 			}
 			return true;
 		} else if (UndirectedNode.class.isAssignableFrom(this.g

@@ -1,19 +1,12 @@
 package dna.graph.nodes;
 
-import com.google.common.collect.Iterables;
-
 import dna.graph.IElement;
 import dna.graph.datastructures.GraphDataStructure;
-import dna.graph.datastructures.IEdgeListDatastructure;
 import dna.graph.datastructures.INodeListDatastructure;
 import dna.graph.edges.DirectedEdge;
 import dna.graph.edges.Edge;
 
 public class DirectedNode extends Node {
-	private IEdgeListDatastructure in;
-	private IEdgeListDatastructure out;
-	private Iterable<IElement> all;
-
 	private INodeListDatastructure neighbors;
 
 	public DirectedNode(int i, GraphDataStructure gds) {
@@ -25,10 +18,7 @@ public class DirectedNode extends Node {
 	}
 
 	public void init() {
-		this.in = this.gds.newNodeEdgeList();
-		this.out = this.gds.newNodeEdgeList();
 		this.neighbors = this.gds.newLocalNodeList();
-		this.all = Iterables.unmodifiableIterable(Iterables.concat(in, out));
 	}
 
 	@Override
@@ -36,8 +26,10 @@ public class DirectedNode extends Node {
 		if (!(eIn instanceof DirectedEdge))
 			return false;
 		DirectedEdge e = (DirectedEdge) eIn;
-		return e.getSrc().getIndex() == this.index && this.out.contains(e)
-				|| e.getDst().getIndex() == this.index && this.in.contains(e);
+		return e.getSrc().getIndex() == this.index
+				&& this.neighbors.contains(e.getDst())
+				|| e.getDst().getIndex() == this.index
+				&& this.neighbors.contains(e.getSrc());
 	}
 
 	@Override
@@ -46,17 +38,11 @@ public class DirectedNode extends Node {
 			return false;
 		DirectedEdge e = (DirectedEdge) eIn;
 		if (e.getSrc().getIndex() == this.index) {
-			boolean success = !this.out.contains(e) && this.out.add(e);
-			if (success && this.in.contains(e.invert())) {
-				success &= this.neighbors.add(e.getDst());
-			}
+			boolean success = !this.neighbors.contains(e.getDst()) && this.neighbors.add(e.getDst());
 			return success;
 		}
 		if (e.getDst().getIndex() == this.index) {
-			boolean success = !this.in.contains(e) && this.in.add(e);
-			if (success && this.out.contains(e.invert())) {
-				success &= this.neighbors.add(e.getSrc());
-			}
+			boolean success = !this.neighbors.contains(e.getSrc()) && this.neighbors.add(e.getSrc());
 			return success;
 		}
 		return false;
@@ -68,27 +54,25 @@ public class DirectedNode extends Node {
 			return false;
 		DirectedEdge e = (DirectedEdge) eIn;
 		if (e.getSrc().getIndex() == this.index) {
-			this.neighbors.remove(e.getDst());
-			return this.out.remove(e);
+			return this.neighbors.remove(e.getDst());
 		}
 		if (e.getDst().getIndex() == this.index) {
-			this.neighbors.remove(e.getSrc());
-			return this.in.remove(e);
+			return this.neighbors.remove(e.getSrc());
 		}
 		return false;
 	}
 
 	@Override
 	public Iterable<IElement> getEdges() {
-		return this.all;
+		throw new RuntimeException("Dont call this");
 	}
 
 	public Iterable<IElement> getIncomingEdges() {
-		return this.in;
+		throw new RuntimeException("Dont call this");
 	}
 
 	public Iterable<IElement> getOutgoingEdges() {
-		return this.out;
+		throw new RuntimeException("Dont call this");
 	}
 
 	public Iterable<IElement> getNeighbors() {
@@ -104,15 +88,15 @@ public class DirectedNode extends Node {
 	}
 
 	public int getDegree() {
-		return this.getInDegree() + this.getOutDegree();
+		return this.neighbors.size();
 	}
 
 	public int getInDegree() {
-		return this.in.size();
+		throw new RuntimeException("Dont call this");
 	}
 
 	public int getOutDegree() {
-		return this.out.size();
+		throw new RuntimeException("Dont call this");
 	}
 
 	public void print() {
@@ -123,7 +107,10 @@ public class DirectedNode extends Node {
 	}
 
 	public String toString() {
-		return super.toString() + " (" + this.in.size() + "/" + this.out.size()
-				+ ")";
+		return super.toString() + " (" + this.neighbors.size() + ")";
+	}
+
+	public boolean removeNeighbor(DirectedNode node) {
+		return this.neighbors.remove(node);
 	}
 }
